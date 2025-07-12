@@ -1,14 +1,15 @@
 from src.masks import get_mask_account, get_mask_card_number
 
+
 def mask_account_card(account_card: str) -> str:
     """Функция, которая умеет обрабатывать информацию как о картах, так и о счетах,
     а затем маскировать их"""
-    account_card = account_card.split()
-    number_card = account_card[-1]
-    if account_card[0] == "Счет":
-        result = account_card[0] + " " + get_mask_account(number_card)
+    account_card_split = account_card.split()
+    number_card = account_card_split[-1]
+    if account_card_split[0] == "Счет":
+        result = account_card_split[0] + " " + get_mask_account(number_card)
     else:
-        result = " ".join(account_card[0:-1]) + " " + get_mask_card_number(number_card)
+        result = " ".join(account_card_split[0:-1]) + " " + get_mask_card_number(number_card)
     return result
 
 
