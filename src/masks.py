@@ -19,11 +19,11 @@ def get_mask_account(account_number: str) -> str:
     return mask_account
 
 
-account_number = str(input("Введите номер аккаунта "))
-mask_account = get_mask_account(account_number)
-print(mask_account)
+#account_number = str(input("Введите номер аккаунта "))
+#mask_account = get_mask_account(account_number)
+#print(mask_account)
 
 
-card_number = str(input("Введите номер карты "))
-mask_number = get_mask_card_number(card_number)
-print(mask_number)
+#card_number = str(input("Введите номер карты "))
+#mask_number = get_mask_card_number(card_number)
+#print(mask_number)
