@@ -15,5 +15,5 @@ def get_mask_account(account_number: str) -> str:
     account_number = str(account_number)
     if not account_number.isdigit() or len(account_number) != 20:
         return 'Неверный номер аккаунта'
-    mask_account = f'**{account_number[2:6]}'
+    mask_account = f'**{account_number[-4:]}'
     return mask_account
