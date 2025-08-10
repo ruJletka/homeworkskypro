@@ -13,7 +13,7 @@ def get_mask_account(account_number: str) -> str:
     '''Функция принимает на вход номер счета и возвращает его маску.
     Номер счета замаскирован и отображается в формате **XXXX'''
     account_number = str(account_number)
-    if not account_number.isdigit() or len(account_number) < 4:
-        return 'Номер аккаунта состоит из не менее чем 4 цифр'
+    if not account_number.isdigit() or len(account_number) < 20:
+        return 'Неверный номер аккаунта'
     mask_account = f'**{account_number[-4:]}'
     return mask_account
