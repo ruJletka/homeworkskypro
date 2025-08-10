@@ -9,11 +9,9 @@ def mask_account_card(account_card: str) -> str:
     account_type = parts_number[0]
     number = parts_number[-1]
 
-
     if account_type == "Счет":
         masked = get_mask_account(number)
         return masked if masked == "Неверный номер аккаунта" else f"{account_type} {masked}"
-
 
     masked = get_mask_card_number(number)
     if masked == "Несуществующий номер карты":
