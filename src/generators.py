@@ -11,3 +11,9 @@ def filter_by_currency(transactions: list, currency: str) -> Iterator[str]:
             yield transaction
 
 
+def transaction_descriptions(transactions: list) -> Iterator[str]:
+    """Функция принимает список словарей с транзакциями
+     и возвращает описание каждой операции по очереди."""
+
+    for transaction in transactions:
+        yield transaction.get("description")
