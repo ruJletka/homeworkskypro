@@ -17,3 +17,11 @@ def transaction_descriptions(transactions: list) -> Iterator[str]:
 
     for transaction in transactions:
         yield transaction.get("description")
+
+
+def card_number_generator(start: int, end: int) -> str:
+    """Функция принимает начальное и конечное значения для генерации диапазона номеров."""
+
+    for number in range(start, end + 1):
+        formatted_card_number = str(number).zfill(16)
+        yield ' '.join([formatted_card_number[i:i + 4] for i in range(0, 16, 4)])
