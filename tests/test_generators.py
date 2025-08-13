@@ -14,3 +14,11 @@ def test_filter_by_currency(trans_list: list, usd_curr: list, rub_curr: list) ->
     return eur_curr
 
 
+@pytest.mark.parametrize("input_data, expected_output", [([{"description": "Оплата товара"}], ["Оплата товара"]),
+                                                        ([{"description": "Перевод"}, {"description": "Покупка"}], ["Перевод", "Покупка"]),
+                                                        ([], []),
+                                                        ([{"description": "Перевод организации"},
+                                                          {"description": "Перевод со счета на счет"}, {"description": "Перевод с карты на карту"}],
+                                                         ["Перевод организации", "Перевод со счета на счет", "Перевод с карты на карту"])])
+def test_transaction_descriptions(input_data, expected_output):
+    assert list(transaction_descriptions(input_data)) == expected_output
