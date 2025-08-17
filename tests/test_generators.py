@@ -21,7 +21,6 @@ def test_filter_by_currency(trans_list: list, usd_curr: list, rub_curr: list, eu
                                                            "Перевод с карты на карту"])])
 def test_transaction_descriptions(input_data, expected_output):
     assert list(transaction_descriptions(input_data)) == expected_output
-    return expected_output
 
 
 @pytest.mark.parametrize("start, end, expected_num", [(1, 1, ["0000 0000 0000 0001"]),
