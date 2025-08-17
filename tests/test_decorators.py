@@ -28,11 +28,11 @@ def test_log_error(capsys):
 def test_log_file(tmp_path):
     log_file = tmp_path / "test_log.txt"
 
-    @log(filename=("test_log.txt"))
+    @log(filename=str(log_file))
     def sum_numbers(a, b):
         return a + b
 
     assert sum_numbers(2, 3) == 5
 
-    with open("test_log.txt", "r", encoding="utf-8") as file:
+    with open(log_file, "r", encoding="utf-8") as file:
         assert "Функция sum_numbers ок. Результат: 5" in file.read()

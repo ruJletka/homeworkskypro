@@ -1,7 +1,7 @@
 from functools import wraps
 
 
-def log(filename = None):
+def log(filename=None):
     """Декоратор, который будет автоматически логировать начало и конец выполнения функции,
      а также ее результаты или возникшие ошибки."""
     def decorator(function):
