@@ -11,22 +11,17 @@ def log(filename=None):
             """Оберточная функция, которая выполняет логирование перед и после вызова целевой функции."""
             try:
                 result = function(*args, **kwargs)
-                name_function = function.__name__
-                if filename:
-                    file = open(filename, "a", encoding="utf-8")
-                    file.write(f"Функция {name_function} ок. Результат: {result}" + "\n")
-                    file.close()
-                else:
-                    print(f"{name_function} ок. Результат: {function(*args, **kwargs)}")
+                message = f"Функция {function.__name__} ок. Результат: {result}"
             except Exception as e:
                 result = None
-                print(f"{function.__name__} error: {e}. Inputs: {args}, {kwargs}")
-            except ZeroDivisionError:
-                result = None
-                print(f"{function.__name__} error: ZeroDivisionError. Inputs: {args}, {kwargs}")
+                message = f"{function.__name__} error: {type(e).__name__}. Inputs: {args}, {kwargs}"
+
+            if filename:
+                with open(filename, "a", encoding="utf-8") as f:
+                    f.write(message + "\n")
+            else:
+                print(message)
 
             return result
-
         return wrapper
-
     return decorator
