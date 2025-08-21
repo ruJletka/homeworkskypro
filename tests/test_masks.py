@@ -13,7 +13,6 @@ from src.masks import get_mask_account, get_mask_card_number
                                                    ("5e99941f228426c3", "Несуществующий номер карты")])
 def test_get_mask_card(card_number: str, expected: str) -> str:
     assert get_mask_card_number(card_number) == expected
-    return expected
 
 
 @pytest.mark.parametrize("account_number, expected", [("73654108430135874305", "**4305"),
@@ -25,4 +24,3 @@ def test_get_mask_card(card_number: str, expected: str) -> str:
                                                       ("0z0f00h00g00r00e00c0", "Неверный номер аккаунта")])
 def test_get_mask_account(account_number: str, expected: str) -> str:
     assert get_mask_account(account_number) == expected
-    return expected
