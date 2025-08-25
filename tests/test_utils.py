@@ -1,7 +1,8 @@
+import json
 import unittest
 from idlelib.iomenu import encoding
 from unittest.mock import mock_open, patch
-import json
+
 from src.utils import load_transaction_data
 
 

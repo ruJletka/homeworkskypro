@@ -1,6 +1,7 @@
 import unittest
-from unittest.mock import patch, MagicMock
-from src.external_api import transaction_amount, API_KEY
+from unittest.mock import MagicMock, patch
+
+from src.external_api import API_KEY, transaction_amount
 
 
 class TestTransactionAmount(unittest.TestCase):
