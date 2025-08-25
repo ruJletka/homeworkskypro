@@ -85,7 +85,3 @@ class TestTransactionAmount(unittest.TestCase):
 
         self.assertIsNone(result)
         mock_get.assert_called_once()
-
-
-if __name__ == '__main__':
-    unittest.main()

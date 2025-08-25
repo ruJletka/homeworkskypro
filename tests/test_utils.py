@@ -68,7 +68,3 @@ class TestDataLoaderParametrized(unittest.TestCase):
                     self.assertEqual(result, expected)
                     mock_open_file.assert_called_with('invalid_type.json', 'r', encoding='utf-8')
                     mock_open_file.reset_mock()
-
-
-if __name__ == '__main__':
-    unittest.main()
