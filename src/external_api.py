@@ -15,7 +15,7 @@ def transaction_amount(transaction):
         elif i["operationAmount"]["currency"]["code"] == "RUB":
             return i["operationAmount"]["amount"]
         elif (i["operationAmount"]["currency"]["code"] == "USD" or
-            i["operationAmount"]["currency"]["code"] == "EUR"):
+              i["operationAmount"]["currency"]["code"] == "EUR"):
             value = float(i["operationAmount"]["amount"])
             if i["operationAmount"]["currency"]["code"] == "EUR":
                 url = f"https://api.apilayer.com/exchangerates_data/convert?to=RUB&from=EUR&amount={value}"
