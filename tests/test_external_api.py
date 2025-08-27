@@ -1,6 +1,6 @@
 import unittest
-from unittest.mock import patch, MagicMock
-from typing import Dict, Any
+from unittest.mock import MagicMock, patch
+
 from src.external_api import transaction_amount
 
 

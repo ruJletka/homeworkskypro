@@ -1,7 +1,8 @@
-import unittest
-from unittest.mock import patch, mock_open
 import json
 import os
+import unittest
+from unittest.mock import mock_open, patch
+
 from src.utils import load_transaction_data
 
 
@@ -98,7 +99,6 @@ class TestLoadTransactionData(unittest.TestCase):
             self.assertEqual(result, [])
             mock_open.assert_called_once_with(os.path.join('data', 'operations.json'), 'r', encoding='utf-8')
 
-
     @patch('os.path.exists')
     @patch('os.path.getsize')
     def test_file_not_found_error(self, mock_getsize, mock_exists):
@@ -112,7 +112,6 @@ class TestLoadTransactionData(unittest.TestCase):
 
             self.assertEqual(result, [])
             mock_open.assert_called_once_with(os.path.join('data', 'operations.json'), 'r', encoding='utf-8')
-
 
     @patch('os.path.exists')
     @patch('os.path.getsize')

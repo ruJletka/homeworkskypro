@@ -1,7 +1,8 @@
 import os
+from typing import Any, Dict
+
 import requests
 from dotenv import load_dotenv
-from typing import Dict, Any
 
 load_dotenv()
 API_KEY = os.getenv('API_KEY')
