@@ -1,5 +1,5 @@
 import os
-from typing import Any, Dict
+from typing import Any, Dict, Union
 
 import requests
 from dotenv import load_dotenv
@@ -8,8 +8,8 @@ load_dotenv()
 API_KEY = os.getenv('API_KEY')
 
 
-def transaction_amount(transaction: Dict[str, Any]) -> float:
-    """Функция, принимающая на вход транзакцию и возвращающая сумму транзакции в рублях"""
+def transaction_amount(transaction: Dict[str, Any]) -> Union[float, str]:
+    """Функция, принимающая на вход транзакцию и возвращающая сумму транзакции в рублях или сообщение об ошибке"""
     if not transaction or transaction == {}:
         return "Нет транзакции!"
 
