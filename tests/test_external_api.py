@@ -1,88 +1,155 @@
 import unittest
-from unittest.mock import MagicMock, patch
-
-from src.external_api import API_KEY, transaction_amount
+from unittest.mock import patch, MagicMock
+from typing import Dict, Any
+from src.external_api import transaction_amount
 
 
 class TestTransactionAmount(unittest.TestCase):
 
-    def setUp(self):
-        self.empty_transaction = [{}]
-        self.rub_transaction = [{
-            "operationAmount": {
-                "amount": "1000.00",
-                "currency": {"code": "RUB"}
-            }
-        }]
-        self.usd_transaction = [{
-            "operationAmount": {
-                "amount": "100.00",
-                "currency": {"code": "USD"}
-            }
-        }]
-        self.eur_transaction = [{
-            "operationAmount": {
-                "amount": "50.00",
-                "currency": {"code": "EUR"}
-            }
-        }]
-
-
     def test_empty_transaction(self):
-        result = transaction_amount(self.empty_transaction)
+        result = transaction_amount({})
         self.assertEqual(result, "Нет транзакции!")
 
+    def test_none_transaction(self):
+        result = transaction_amount(None)
+        self.assertEqual(result, "Нет транзакции!")
 
-    def test_rub_transaction(self):
-        result = transaction_amount(self.rub_transaction)
-        self.assertEqual(result, "1000.00")
+    def test_rub_currency(self):
+        transaction = {
+            "operationAmount": {
+                "amount": "1500.50",
+                "currency": {
+                    "code": "RUB"
+                }
+            }
+        }
+        result = transaction_amount(transaction)
+        self.assertEqual(result, 1500.50)
 
-
-    @patch('src.external_api.requests.get')
-    def test_eur_transaction_success(self, mock_get):
+    @patch('src.external_api.API_KEY', 'test_api_key')
+    @patch('requests.get')
+    def test_usd_currency_success(self, mock_get):
         mock_response = MagicMock()
         mock_response.status_code = 200
-        mock_response.json.return_value = {"result": 4500.0}
+        mock_response.json.return_value = {
+            "success": True,
+            "result": 7500.25
+        }
         mock_get.return_value = mock_response
 
-        result = transaction_amount(self.eur_transaction)
+        transaction = {
+            "operationAmount": {
+                "amount": "100.00",
+                "currency": {
+                    "code": "USD"
+                }
+            }
+        }
 
-        self.assertEqual(result, 4500.0)
-        mock_get.assert_called_once()
+        result = transaction_amount(transaction)
 
+        self.assertEqual(result, 7500.25)
+        mock_get.assert_called_once_with(
+            "https://api.apilayer.com/exchangerates_data/convert?to=RUB&from=USD&amount=100.0",
+            headers={"apikey": "test_api_key"}
+        )
 
-    @patch('src.external_api.requests.get')
-    def test_api_error_400(self, mock_get):
+    @patch('src.external_api.API_KEY', 'test_api_key')
+    @patch('requests.get')
+    def test_eur_currency_success(self, mock_get):
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            "success": True,
+            "result": 8500.75
+        }
+        mock_get.return_value = mock_response
+
+        transaction = {
+            "operationAmount": {
+                "amount": "85.50",
+                "currency": {
+                    "code": "EUR"
+                }
+            }
+        }
+
+        result = transaction_amount(transaction)
+
+        self.assertEqual(result, 8500.75)
+        mock_get.assert_called_once_with(
+            "https://api.apilayer.com/exchangerates_data/convert?to=RUB&from=EUR&amount=85.5",
+            headers={"apikey": "test_api_key"}
+        )
+
+    @patch('src.external_api.API_KEY', 'test_api_key')
+    @patch('requests.get')
+    def test_api_failure_status_code(self, mock_get):
         mock_response = MagicMock()
         mock_response.status_code = 400
         mock_get.return_value = mock_response
 
-        result = transaction_amount(self.usd_transaction)
+        transaction = {
+            "operationAmount": {
+                "amount": "100.00",
+                "currency": {
+                    "code": "USD"
+                }
+            }
+        }
 
-        self.assertEqual(result, "Запрос содержит синтаксическую ошибку или неверные параметры.")
-        mock_get.assert_called_once()
+        result = transaction_amount(transaction)
+        self.assertEqual(result, "Ошибка при конвертации валюты")
 
-
-    @patch('src.external_api.requests.get')
-    def test_api_error_500(self, mock_get):
+    @patch('src.external_api.API_KEY', 'test_api_key')
+    @patch('requests.get')
+    def test_api_failure_success_false(self, mock_get):
         mock_response = MagicMock()
-        mock_response.status_code = 500
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            "success": False,
+            "error": {"info": "Invalid API key"}
+        }
         mock_get.return_value = mock_response
 
-        result = transaction_amount(self.usd_transaction)
+        transaction = {
+            "operationAmount": {
+                "amount": "100.00",
+                "currency": {
+                    "code": "USD"
+                }
+            }
+        }
 
-        self.assertEqual(result,
-                         "На стороне сервера произошла непредвиденная ошибка, которая не позволила выполнить запрос.")
-        mock_get.assert_called_once()
+        result = transaction_amount(transaction)
+        self.assertEqual(result, "Ошибка при конвертации валюты")
 
+    @patch('src.external_api.API_KEY', 'test_api_key')
+    @patch('requests.get')
+    def test_api_exception(self, mock_get):
+        mock_get.side_effect = Exception("Connection error")
 
-    @patch('src.external_api.requests.get')
-    def test_api_other_error_code(self, mock_get):
-        mock_response = MagicMock()
-        mock_response.status_code = 404
-        mock_get.return_value = mock_response
+        transaction = {
+            "operationAmount": {
+                "amount": "100.00",
+                "currency": {
+                    "code": "USD"
+                }
+            }
+        }
 
-        result = transaction_amount(self.usd_transaction)
+        result = transaction_amount(transaction)
+        self.assertEqual(result, "Ошибка при запросе к API")
 
-        self.assertIsNone(result)
-        mock_get.assert_called_once()
+    def test_unsupported_currency(self):
+        transaction = {
+            "operationAmount": {
+                "amount": "100.00",
+                "currency": {
+                    "code": "GBP"
+                }
+            }
+        }
+
+        result = transaction_amount(transaction)
+        self.assertEqual(result, "Неподдерживаемая валюта: GBP")

@@ -1,35 +1,38 @@
 import os
-
 import requests
 from dotenv import load_dotenv
+from typing import Dict, Any
 
 load_dotenv()
 API_KEY = os.getenv('API_KEY')
 
 
-def transaction_amount(transaction):
+def transaction_amount(transaction: Dict[str, Any]) -> float:
     """Функция, принимающая на вход транзакцию и возвращающая сумму транзакции в рублях"""
-    for i in transaction:
-        if i == {}:
-            return "Нет транзакции!"
-        elif i["operationAmount"]["currency"]["code"] == "RUB":
-            return i["operationAmount"]["amount"]
-        elif (i["operationAmount"]["currency"]["code"] == "USD" or
-              i["operationAmount"]["currency"]["code"] == "EUR"):
-            value = float(i["operationAmount"]["amount"])
-            if i["operationAmount"]["currency"]["code"] == "EUR":
-                url = f"https://api.apilayer.com/exchangerates_data/convert?to=RUB&from=EUR&amount={value}"
-            elif i["operationAmount"]["currency"]["code"] == "USD":
-                url = f"https://api.apilayer.com/exchangerates_data/convert?to=RUB&from=USD&amount={value}"
-            payload = {}
-            headers = {"apikey": f"{API_KEY}"}
-            response = requests.get(url, headers=headers, data=payload)
-            status_code = response.status_code
-            if status_code == 200:
-                convert_amount = response.json()
-                result = convert_amount["result"]
-                return result
-            elif status_code == 400:
-                return "Запрос содержит синтаксическую ошибку или неверные параметры."
-            elif status_code == 500:
-                return "На стороне сервера произошла непредвиденная ошибка, которая не позволила выполнить запрос."
+    if not transaction or transaction == {}:
+        return "Нет транзакции!"
+
+    # Получаем данные о валюте и сумме
+    currency_code = transaction["operationAmount"]["currency"]["code"]
+    amount = float(transaction["operationAmount"]["amount"])
+
+    if currency_code == "RUB":
+        return amount
+
+    if currency_code in ["USD", "EUR"]:
+        url = f"https://api.apilayer.com/exchangerates_data/convert?to=RUB&from={currency_code}&amount={amount}"
+        headers = {"apikey": API_KEY}
+
+        try:
+            response = requests.get(url, headers=headers)
+            data = response.json()
+
+            if response.status_code == 200 and data.get("success", False):
+                return round(data["result"], 2)
+            else:
+                return "Ошибка при конвертации валюты"
+
+        except:
+            return "Ошибка при запросе к API"
+
+    return f"Неподдерживаемая валюта: {currency_code}"
