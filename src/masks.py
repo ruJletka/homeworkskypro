@@ -12,7 +12,7 @@ def setup_logger():
     log_file = logs_dir / f"app_{__name__}.log"
 
     logger = logging.getLogger(__name__)
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging.DEBUG)
 
     logger.handlers.clear()
 
