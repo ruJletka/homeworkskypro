@@ -1,11 +1,9 @@
 import logging
-import os
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 
 def setup_logger():
-    """Настройка и конфигурация логера"""
     project_root = Path(__file__).parent
 
     logs_dir = project_root / "logs"
@@ -14,7 +12,7 @@ def setup_logger():
     current_date = datetime.now().strftime("%Y-%m-%d")
     log_file = logs_dir / f"app_{current_date}.log"
 
-    logger = logging.getLogger("card_mask_logger")
+    logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)
 
     logger.handlers.clear()
