@@ -1,7 +1,3 @@
-from fileinput import filename
-
-import pytest
-
 from src.decorators import log
 
 
@@ -54,4 +50,4 @@ def test_error_log_file(tmp_path):
 
     assert "faulty_func error: ValueError" in content
     assert "Inputs: (), {}" in content
-    
+
