@@ -1,4 +1,36 @@
-from logger_config import logger
+import logging
+from pathlib import Path
+
+
+def setup_logger():
+    current_file_path = Path(__file__).resolve()
+    project_root = current_file_path.parent.parent
+
+    logs_dir = project_root / "logs"
+    logs_dir.mkdir(exist_ok=True)
+
+    log_file = logs_dir / f"app_{__name__}.log"
+
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.INFO)
+
+    logger.handlers.clear()
+
+    formatter = logging.Formatter(
+        '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S'
+    )
+
+    file_handler = logging.FileHandler(log_file, mode='w', encoding='utf-8')
+    file_handler.setFormatter(formatter)
+    file_handler.setLevel(logging.INFO)
+
+    logger.addHandler(file_handler)
+
+    return logger
+
+
+logger = setup_logger()
 
 
 def get_mask_card_number(card_number: str) -> str:
@@ -38,14 +70,3 @@ def get_mask_account(account_number: str) -> str:
     logger.info(f"Успешное создание маски аккаунта: {mask_account}")
 
     return mask_account
-
-
-if __name__ == "__main__":
-    test_card = "1234567890123456"
-    test_account = "12345678901234567890"
-
-    print(get_mask_card_number(test_card))
-    print(get_mask_account(test_account))
-
-    print(get_mask_card_number("123"))
-    print(get_mask_account("short"))
