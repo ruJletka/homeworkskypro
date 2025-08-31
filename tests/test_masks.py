@@ -8,12 +8,12 @@ from src.masks import get_mask_account, get_mask_card_number
 @pytest.mark.parametrize(
     "card_number, expected",
     [
-        ("1596837868705199", "1596 83 ** 5199"),
-        ("7158300734726758", "7158 30 ** 6758"),
-        ("6831982476737658", "6831 98 ** 7658"),
-        ("8990922113665229", "8990 92 ** 5229"),
-        ("5999414228426353", "5999 41 ** 6353"),
-        ("1337666777228282", "1337 66 ** 8282"),
+        ("1596837868705199", "1596 83** **** 5199"),
+        ("7158300734726758", "7158 30** **** 6758"),
+        ("6831982476737658", "6831 98** **** 7658"),
+        ("8990922113665229", "8990 92** **** 5229"),
+        ("5999414228426353", "5999 41** **** 6353"),
+        ("1337666777228282", "1337 66** **** 8282"),
         ("89909221136652292", "Несуществующий номер карты"),
         ("5e99941f228426c3", "Несуществующий номер карты"),
         ("1234", "Несуществующий номер карты"),
@@ -45,10 +45,10 @@ def test_get_mask_account(account_number: str, expected: str) -> None:
 def test_get_mask_card_number_logging() -> None:
     with patch('src.masks.logger') as mock_logger:
         result = get_mask_card_number("1596837868705199")
-        assert result == "1596 83 ** 5199"
+        assert result == "1596 83** **** 5199"
 
         mock_logger.info.assert_any_call("Вызов функции get_mask_card_number с аргументом: 1596837868705199")
-        mock_logger.info.assert_any_call("Успешное создание маски карты: 1596 83 ** 5199")
+        mock_logger.info.assert_any_call("Успешное создание маски карты: 1596 83** **** 5199")
 
         result = get_mask_card_number("123")
         assert result == "Несуществующий номер карты"
@@ -75,13 +75,13 @@ def test_get_mask_account_logging() -> None:
 
 
 def test_get_mask_card_number_edge_cases() -> None:
-    assert get_mask_card_number("1" * 16) == "1111 11 ** 1111"
+    assert get_mask_card_number("1" * 16) == "1111 11** **** 1111"
 
-    assert get_mask_card_number("0" * 16) == "0000 00 ** 0000"
+    assert get_mask_card_number("0" * 16) == "0000 00** **** 0000"
 
     assert get_mask_card_number(None) == "Несуществующий номер карты"
 
-    assert get_mask_card_number(1596837868705199) == "1596 83 ** 5199"
+    assert get_mask_card_number(1596837868705199) == "1596 83** **** 5199"
 
 
 def test_get_mask_account_edge_cases() -> None:
