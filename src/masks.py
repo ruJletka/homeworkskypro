@@ -36,7 +36,7 @@ logger = setup_logger()
 def get_mask_card_number(card_number: str) -> str:
     '''Функция принимает на вход номер карты в виде
      числа и возвращает маску номера по правилу
-     XXXX XX ** XXXX'''
+     XXXX XX** **** XXXX'''
 
     logger.info(f"Вызов функции get_mask_card_number с аргументом: {card_number}")
 
@@ -47,7 +47,7 @@ def get_mask_card_number(card_number: str) -> str:
         logger.error(f"Ошибка в get_mask_card_number: {error_msg}. Входные данные: {card_number}")
         return error_msg
 
-    mask_number = f'{card_number[:4]} {card_number[4:6]} ** {card_number[12:]}'
+    mask_number = f'{card_number[:4]} {card_number[4:6]}** **** {card_number[12:]}'
     logger.info(f"Успешное создание маски карты: {mask_number}")
 
     return mask_number
