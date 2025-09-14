@@ -5,7 +5,7 @@ import requests
 from dotenv import load_dotenv
 
 load_dotenv()
-API_KEY = os.getenv('API_KEY')
+API_KEY = os.getenv("API_KEY")
 
 
 def transaction_amount(transaction: Dict[str, Any]) -> Union[float, str]:

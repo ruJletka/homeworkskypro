@@ -1,3 +1,6 @@
+import logging
+from typing import Dict, List
+
 import pytest
 
 
@@ -167,3 +170,27 @@ def rub_curr() -> list:
 @pytest.fixture
 def eur_curr() -> list:
     return []
+
+
+@pytest.fixture(autouse=True)
+def capture_logs(caplog):
+    caplog.set_level(logging.ERROR)
+
+
+@pytest.fixture
+def test_csv_data():
+    """Фикстура с тестовыми данными CSV"""
+    return """date;amount;category;description
+2023-01-01;1000;income;Salary
+2023-01-02;-500;food;Groceries
+2023-01-03;-200;transport;Bus ticket"""
+
+
+@pytest.fixture
+def expected_result():
+    """Фикстура с ожидаемым результатом"""
+    return [
+        {'date': '2023-01-01', 'amount': '1000', 'category': 'income', 'description': 'Salary'},
+        {'date': '2023-01-02', 'amount': '-500', 'category': 'food', 'description': 'Groceries'},
+        {'date': '2023-01-03', 'amount': '-200', 'category': 'transport', 'description': 'Bus ticket'}
+    ]

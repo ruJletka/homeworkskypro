@@ -3,9 +3,11 @@ from functools import wraps
 
 def log(filename=None):
     """Декоратор, который будет автоматически логировать начало и конец выполнения функции,
-     а также ее результаты или возникшие ошибки."""
+    а также ее результаты или возникшие ошибки."""
+
     def decorator(function):
         """Внутренний декоратор, который применяется к целевой функции."""
+
         @wraps(function)
         def wrapper(*args, **kwargs):
             """Оберточная функция, которая выполняет логирование перед и после вызова целевой функции."""
@@ -23,5 +25,7 @@ def log(filename=None):
                 print(message)
 
             return result
+
         return wrapper
+
     return decorator

@@ -18,7 +18,7 @@ from src.masks import get_mask_account, get_mask_card_number
         ("5e99941f228426c3", "Несуществующий номер карты"),
         ("1234", "Несуществующий номер карты"),
         ("", "Несуществующий номер карты"),
-    ]
+    ],
 )
 def test_get_mask_card_number(card_number: str, expected: str) -> None:
     assert get_mask_card_number(card_number) == expected
@@ -36,14 +36,14 @@ def test_get_mask_card_number(card_number: str, expected: str) -> None:
         ("0z0f00h00g00r00e00c0", "Неверный номер аккаунта"),
         ("12345", "Неверный номер аккаунта"),
         ("", "Неверный номер аккаунта"),
-    ]
+    ],
 )
 def test_get_mask_account(account_number: str, expected: str) -> None:
     assert get_mask_account(account_number) == expected
 
 
 def test_get_mask_card_number_logging() -> None:
-    with patch('src.masks.logger') as mock_logger:
+    with patch("src.masks.logger") as mock_logger:
         result = get_mask_card_number("1596837868705199")
         assert result == "1596 83** **** 5199"
 
@@ -59,7 +59,7 @@ def test_get_mask_card_number_logging() -> None:
 
 
 def test_get_mask_account_logging() -> None:
-    with patch('src.masks.logger') as mock_logger:
+    with patch("src.masks.logger") as mock_logger:
         result = get_mask_account("73654108430135874305")
         assert result == "**4305"
 
