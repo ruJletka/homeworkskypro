@@ -9,7 +9,7 @@ def test_log_success(capsys):
     result = add(2, 3)
     captured = capsys.readouterr()
     assert result == 5
-    assert ("add ок. Результат: 5" in captured.out)
+    assert "add ок. Результат: 5" in captured.out
 
 
 def test_log_error(capsys):

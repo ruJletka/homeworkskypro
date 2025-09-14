@@ -13,7 +13,7 @@ def filter_by_currency(transactions: list, currency: str) -> Iterator[str]:
 
 def transaction_descriptions(transactions: list) -> Iterator[str]:
     """Функция принимает список словарей с транзакциями
-     и возвращает описание каждой операции по очереди."""
+    и возвращает описание каждой операции по очереди."""
 
     for transaction in transactions:
         yield transaction.get("description")
@@ -24,4 +24,4 @@ def card_number_generator(start: int, end: int) -> str:
 
     for number in range(start, end + 1):
         formatted_card_number = str(number).zfill(16)
-        yield ' '.join([formatted_card_number[i:i + 4] for i in range(0, 16, 4)])
+        yield " ".join([formatted_card_number[i: i + 4] for i in range(0, 16, 4)])

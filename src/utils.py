@@ -18,12 +18,9 @@ def setup_logger():
 
     logger.handlers.clear()
 
-    formatter = logging.Formatter(
-        '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-        datefmt='%Y-%m-%d %H:%M:%S'
-    )
+    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
 
-    file_handler = logging.FileHandler(log_file, mode='w', encoding='utf-8')
+    file_handler = logging.FileHandler(log_file, mode="w", encoding="utf-8")
     file_handler.setFormatter(formatter)
     file_handler.setLevel(logging.INFO)
 
@@ -40,7 +37,7 @@ def load_transaction_data() -> list[dict[str, any]]:
     try:
         logger.info("Начало загрузки данных о транзакциях")
 
-        file_path = os.path.join('data', 'operations.json')
+        file_path = os.path.join("data", "operations.json")
         logger.debug(f"Путь к файлу: {file_path}")
 
         if not os.path.exists(file_path):
@@ -52,7 +49,7 @@ def load_transaction_data() -> list[dict[str, any]]:
             return []
 
         logger.info("Чтение файла с данными транзакций")
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, "r", encoding="utf-8") as f:
             data = json.load(f)
 
         if not isinstance(data, list):
