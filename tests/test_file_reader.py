@@ -1,55 +1,79 @@
-import unittest
-from unittest.mock import MagicMock, mock_open, patch
+from unittest.mock import mock_open, patch
+
+import pandas as pd
+import pytest
 
 from src.file_reader import read_transaction_csv, read_transaction_excel
 
 
-class TestTransactionFunctions(unittest.TestCase):
+def test_read_transaction_csv_success(test_csv_data, expected_result):
+    with patch('builtins.open', mock_open(read_data=test_csv_data)):
+        with patch('os.path.join', return_value="data/transactions.csv"):
+            result = read_transaction_csv()
 
-    def test_read_transaction_csv_normal_case(self):
-        csv_content = """date;amount;description
-2023-01-01;1000.00;Salary
-2023-01-02;-50.00;Grocery"""
+            assert len(result) == 3
+            assert result == expected_result
+            assert isinstance(result, list)
+            for item in result:
+                assert isinstance(item, dict)
 
-        expected_result = [
-            {'date': '2023-01-01', 'amount': '1000.00', 'description': 'Salary'},
-            {'date': '2023-01-02', 'amount': '-50.00', 'description': 'Grocery'}
-        ]
 
-        with patch('builtins.open', mock_open(read_data=csv_content)):
-            with patch('csv.DictReader') as mock_reader:
-                mock_reader.return_value = expected_result
+def test_read_transaction_csv_file_not_found():
+    with patch('builtins.open', side_effect=FileNotFoundError("File not found")):
+        with patch('os.path.join', return_value="data/transactions.csv"):
+            with pytest.raises(FileNotFoundError):
+                read_transaction_csv()
 
-                result = read_transaction_csv('test.csv')
-                self.assertEqual(result, expected_result)
 
-    def test_read_transaction_csv_empty_file(self):
-        csv_content = "date;amount;description\n"
+def test_read_transaction_csv_encoding_error():
+    with patch('builtins.open', side_effect=UnicodeDecodeError("utf-8", b"", 0, 1, "Invalid byte")):
+        with patch('os.path.join', return_value="data/transactions.csv"):
+            with pytest.raises(UnicodeDecodeError):
+                read_transaction_csv()
 
-        with patch('builtins.open', mock_open(read_data=csv_content)):
-            with patch('csv.DictReader') as mock_reader:
-                mock_reader.return_value = []
 
-                result = read_transaction_csv('empty.csv')
-                self.assertEqual(result, [])
+@patch('pandas.read_excel')
+def test_read_transaction_excel_success(mock_read_excel, expected_result):
+    mock_df = pd.DataFrame(expected_result)
+    mock_read_excel.return_value = mock_df
 
-    def test_read_transaction_excel_normal_case(self):
-        mock_df = MagicMock()
-        expected_result = [
-            {'date': '2023-01-01', 'amount': '1000.00', 'description': 'Salary'},
-            {'date': '2023-01-02', 'amount': '-50.00', 'description': 'Grocery'}
-        ]
+    with patch('os.path.join', return_value="data/transactions_excel.xlsx"):
+        result = read_transaction_excel()
 
-        mock_df.to_dict.return_value = expected_result
+        assert len(result) == 3
+        assert result == expected_result
+        assert isinstance(result, list)
+        for item in result:
+            assert isinstance(item, dict)
 
-        with patch('pandas.read_excel', return_value=mock_df):
-            result = read_transaction_excel('test.xlsx')
-            self.assertEqual(result, expected_result)
+    mock_read_excel.assert_called_once_with("data/transactions_excel.xlsx")
 
-    def test_read_transaction_excel_empty_file(self):
-        mock_df = MagicMock()
-        mock_df.to_dict.return_value = []
 
-        with patch('pandas.read_excel', return_value=mock_df):
-            result = read_transaction_excel('empty.xlsx')
-            self.assertEqual(result, [])
+@patch('pandas.read_excel')
+def test_read_transaction_excel_file_not_found(mock_read_excel):
+    mock_read_excel.side_effect = FileNotFoundError("Excel file not found")
+
+    with patch('os.path.join', return_value="data/transactions_excel.xlsx"):
+        with pytest.raises(FileNotFoundError):
+            read_transaction_excel()
+
+
+def test_read_transaction_csv_empty_file():
+    empty_csv_data = "date;amount;category;description"
+
+    with patch('builtins.open', mock_open(read_data=empty_csv_data)):
+        with patch('os.path.join', return_value="data/transactions.csv"):
+            result = read_transaction_csv()
+
+            assert result == []
+
+
+@patch('pandas.read_excel')
+def test_read_transaction_excel_empty_file(mock_read_excel):
+    mock_df = pd.DataFrame()
+    mock_read_excel.return_value = mock_df
+
+    with patch('os.path.join', return_value="data/transactions_excel.xlsx"):
+        result = read_transaction_excel()
+
+        assert result == []
