@@ -144,6 +144,8 @@ ENV/
 env.bak/
 venv.bak/
 new_venv
+transactions.csv
+transactions_excel.xlsx
 
 # Spyder project settings
 .spyderproject
