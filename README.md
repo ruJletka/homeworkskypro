@@ -10,8 +10,14 @@
 - `get_date` - вывод даты в формате ДД.ММ.ГГГГ
 - `filter_by_currency(transactions_list, currency)` - функция возвращает итератор, который поочередно выдает транзакции с соответствующей валютой.
 - `transaction_descriptions(transactions_list)` - функция возвращает описание каждой операции по очереди
-- `card_number_generator(start, end)` - Функция возвращает номера банковских карт в формате:   `XXXX XXXX XXXX XXXX` где X — цифра номера карты
-
+- `card_number_generator(start, end)` - функция возвращает номера банковских карт в формате:   `XXXX XXXX XXXX XXXX` где X — цифра номера карты
+-  `log(filename)` - декоратор для логирования с настройками
+-  `load_transaction_data()` - функция по заданному пути открывает json файл и возвращает его
+-  `transaction_amount` - функция возвращает сумму транзакции в рублях
+-  `read_transaction_csv()` - функция чтения из .csv файла
+-  `read_transaction_excel()` - функция чтения из excel файла
+- `process_bank_search` - функция фильтрует список операций по заданным словам
+- `process_bank_operations` - Подсчитывает количество операций по заданным категориям.
   ## Тесты
 Структура тестов:
 
